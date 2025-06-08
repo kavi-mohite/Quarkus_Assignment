@@ -31,7 +31,7 @@ public class GreetingResource  {
     
     @Inject
     ProductService service;
-
+    
     @GET
     @Path("/products")
     public Uni<List<Product>> getAllProducts() {
@@ -46,6 +46,8 @@ public class GreetingResource  {
 
 	
 	  @POST 
+	  @WithTransaction
+	  @Consumes(MediaType.APPLICATION_JSON)
 	  public Uni<Product> addProduct(Product product) { return
 	  service.createProduct(product); }
 	  
