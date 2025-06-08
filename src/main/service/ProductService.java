@@ -5,6 +5,7 @@ import java.util.Map;
 
 import jakarta.ws.rs.core.Response;
 import io.quarkus.hibernate.reactive.panache.Panache;
+import io.quarkus.hibernate.reactive.panache.common.WithTransaction;
 import io.quarkus.panache.common.Sort;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -18,8 +19,11 @@ public class ProductService {
 	 @Inject
 	    ProductRespository repository;
 
+	 @WithTransaction
 	    public Uni<List<Product>> getAllProducts() {
-	        return repository.listAll();
+	        return repository.findAll().list()
+	        		.onItem().ifNull().continueWith(List.of());
+	        				//() -> new RuntimeException("No product found"));
 	    }
 
 	    public Uni<Product> getProductById(Long id) {
